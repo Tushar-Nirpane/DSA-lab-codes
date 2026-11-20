@@ -14,9 +14,9 @@ All programs compile cleanly with `-Wall -Wextra` under C11.
 | 2 | `p2_bubble_sort.c` | Bubble sort (optimized, early exit) | Sorting student roll numbers |
 | 3 | `p3_contact_list.c` | Singly linked list | Phone contact list |
 | 4 | `p4_browser_navigation.c` | Two stacks (back / forward) | Browser history navigation |
-| 5 | `p5_patient_queue.c` | Circular queue (array based) | Hospital patient waiting line |
+| 5 | `p5_patient_queue.c` | Circular queue (array based) | Hospital patient waiting line, arrivals in `HH:MM` |
 | 6 | `p6_bst.c` | Binary search tree | Student roll number index |
-| 7 | `p7_graph_social.c` | Graph (adjacency matrix), BFS, DFS | Social network connections |
+| 7 | `p7_graph_social.c` | Graph (adjacency matrix), BFS, DFS | Social network connections and display |
 | 8 | `p8_hash_table.c` | Hash table with linear probing | Library book lookup |
 
 ### 1. Array Operations (`p1_array_operations.c`)
@@ -61,7 +61,8 @@ clears the forward stack, matching real browser behaviour.
 
 A circular queue of patients holding a patient ID and an arrival time. Because
 the queue wraps around the array, freed slots at the front are reused instead
-of being wasted.
+of being wasted. Arrival time is entered as `HHMM` (e.g. `930`), validated
+against 0000-2359, and displayed back as `09:30`.
 
 - `addPatient` (enqueue), `attendPatient` (dequeue) — O(1)
 - `viewPatients` — O(n)
@@ -79,10 +80,12 @@ roll numbers are rejected.
 ### 7. Social Graph (`p7_graph_social.c`)
 
 An undirected graph of up to 50 users stored as an adjacency matrix. Users are
-created on first mention, connections are added symmetrically, and both BFS and
-DFS traversals are provided.
+created on first mention, connections are added symmetrically, repeated
+connections are rejected, and the network can be displayed as a friend list per
+user. Both BFS and DFS traversals are provided.
 
 - Edge insert — O(1)
+- `displayNetwork` — O(V²)
 - BFS / DFS — O(V²) with a matrix representation
 
 ### 8. Hash Table (`p8_hash_table.c`)

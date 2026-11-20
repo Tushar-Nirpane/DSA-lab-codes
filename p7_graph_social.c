@@ -12,7 +12,8 @@ int getUser(const char *name) {
     for (int i = 0; i < userCount; i++)
         if (strcmp(users[i], name) == 0) return i;
     if (userCount == MAX_USERS) return -1;
-    strcpy(users[userCount], name);
+    strncpy(users[userCount], name, MAX_NAME - 1);
+    users[userCount][MAX_NAME - 1] = '\0';
     return userCount++;
 }
 
@@ -20,8 +21,26 @@ void addConnection(const char *a, const char *b) {
     int i = getUser(a), j = getUser(b);
     if (i < 0 || j < 0) { printf("User limit reached.\n"); return; }
     if (i == j) { printf("A user cannot connect to self.\n"); return; }
+    if (adj[i][j]) { printf("%s and %s are already connected.\n", a, b); return; }
     adj[i][j] = adj[j][i] = 1;
     printf("Connected %s and %s.\n", a, b);
+}
+
+/* Shows every user with the people they are connected to (adjacency list view). */
+void displayNetwork(void) {
+    if (userCount == 0) { printf("No users yet.\n"); return; }
+    printf("\n%-15s %-10s %s\n", "User", "Friends", "Connected to");
+    printf("--------------------------------------------------\n");
+    for (int i = 0; i < userCount; i++) {
+        int friends = 0;
+        for (int v = 0; v < userCount; v++)
+            if (adj[i][v]) friends++;
+        printf("%-15s %-10d ", users[i], friends);
+        if (friends == 0) printf("(none)");
+        for (int v = 0; v < userCount; v++)
+            if (adj[i][v]) printf("%s ", users[v]);
+        printf("\n");
+    }
 }
 
 void bfs(int start) {
@@ -61,24 +80,27 @@ int main(void) {
     char a[MAX_NAME], b[MAX_NAME];
 
     do {
-        printf("\n1.Add connection 2.BFS 3.DFS 0.Exit\nChoice: ");
+        printf("\n1.Add connection 2.Display network 3.BFS 4.DFS 0.Exit\nChoice: ");
         if (scanf("%d", &choice) != 1) break;
         switch (choice) {
         case 1:
             printf("Enter two user names: ");
-            scanf("%29s %29s", a, b);
+            if (scanf("%29s %29s", a, b) != 2) return 0;
             addConnection(a, b);
             break;
         case 2:
+            displayNetwork();
+            break;
         case 3:
+        case 4:
             printf("Enter start user: ");
-            scanf("%29s", a);
+            if (scanf("%29s", a) != 1) return 0;
             {
                 int s = -1;
                 for (int i = 0; i < userCount; i++)
                     if (strcmp(users[i], a) == 0) s = i;
                 if (s < 0) { printf("User not found.\n"); break; }
-                if (choice == 2) bfs(s); else dfs(s);
+                if (choice == 3) bfs(s); else dfs(s);
             }
             break;
         case 0: break;
