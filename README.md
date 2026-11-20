@@ -119,3 +119,11 @@ for f in p*.c; do cc -std=c11 -Wall -Wextra "$f" -o "${f%.c}"; done
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## 👥 Contributors
+
+| Contributor | Role |
+| :--- | :--- |
+| [**Tushar Nirpane**](https://github.com/Tushar-Nirpane) | Author & maintainer |
